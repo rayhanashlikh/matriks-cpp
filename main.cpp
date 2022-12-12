@@ -1,7 +1,23 @@
 // C++ program to find adjoint and inverse of a matrix
 #include <bits/stdc++.h>
+#include <conio.h>
 using namespace std;
 #define N 3
+
+template <class T>
+void display(T A[N][N])
+{
+	for (int i = 0; i < N; i++)
+	{
+		cout << "| ";
+		for (int j = 0; j < N; j++)
+		{
+			cout << A[i][j] << " ";
+		}
+		cout << " |" << endl;
+	}
+	cout << endl;
+}
 
 void input(int A[N][N])
 {
@@ -12,6 +28,20 @@ void input(int A[N][N])
 			cin >> A[i][j];
 		}
 		cout << endl;
+	}
+
+	cout << "Matriks yang telah diinputkan adalah : " << endl;
+	display(A);
+}
+
+void add(int A[N][N], int B[N][N], int C[N][N])
+{
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+		{
+			C[i][j] = A[i][j] + B[i][j];
+		}
 	}
 }
 
@@ -127,7 +157,7 @@ bool inverse(int A[N][N], float inverse[N][N])
 	int det = determinant(A, N);
 	if (det == 0)
 	{
-		cout << "Singular matrix, can't find its inverse";
+		cout << "Matriks Singular, tidak memiliki invers";
 		return false;
 	}
 
@@ -144,61 +174,172 @@ bool inverse(int A[N][N], float inverse[N][N])
 	return true;
 }
 
-template <class T>
-void display(T A[N][N])
+void clear()
 {
-	for (int i = 0; i < N; i++)
-	{
-		cout << "| ";
-		for (int j = 0; j < N; j++)
-		{
-			cout << A[i][j] << " ";
-		}
-		cout << " |" << endl;
-	}
+	cout << "\nPress anything to continue...";
+	getch();
 }
 
 int main()
 {
-	int A[N][N] = {11, 2, 3,
-				   4, 5, 6,
-				   7, 21, 9};
-
-	int B[N][N]
-	= { 10, 11, 12,
+	int option, 
+	A[N][N] = {
+		-11, 2, 3,
+		4, 5, 6,
+		7, 21, 9
+	}, 
+	B[N][N] = {
+		10, 11, 12,
 		13, 14, 15,
-		16, 17, 18 };
+		16, 17, 18
+	}, 
+	C[N][N], adj[N][N];
+	float inv[N][N];
+	char pilih;
 
-	int C[N][N];
-	int adj[N][N]; // To store adjoint of A[][]
-	int cof[N][N]; // To store cofactor of A[][]
+	do
+	{
+		system("cls");
+		cout << "OPERASI MATRIKS" << endl;
+		cout << "1. Input matriks" << endl;
+		cout << "2. Jumlahkan matriks" << endl;
+		cout << "3. Kalikan matriks" << endl;
+		cout << "4. Determinan matriks" << endl;
+		cout << "5. Adjoin matriks" << endl;
+		cout << "6. Invers matriks" << endl;
+		cout << "7. Lihat matriks" << endl;
+		cout << "0. Keluar" << endl;
 
-	float inv[N][N]; // To store inverse of A[][]
+		cout << "\nMasukkan pilihan anda: ";
+		cin >> option;
 
-	cout << "Enter the elements of first matrix: " << endl;
-	input(A);
-	cout << "Enter the elements of second matrix: " << endl;
-	input(B);
+		switch(option)
+		{
+			case 1:
+				system("cls");
+				cout << "Masukkan elemen matriks pertama: " << endl;
+				input(A);
+				cout << "\nMasukkan elemen matriks kedua: " << endl;
+				input(B);
+				clear();
+				break;
 
-	cout << "Input matrix is :\n";
-	display(A);
-	cout << "\n";
-	display(B);
+			case 2:
+				system("cls");
+				cout << "Matriks pertama: " << endl;
+				display(A);
+				cout << "\nMatriks kedua: " << endl;
+				display(B);
 
-	cout << "\nMultiplication between two matrices: " << endl;
-	multiply(A, B, C);
-	display(C);
+				cout << "\nHasil penjumlahan: " << endl;
+				add(A, B, C);
+				display(C);
+				clear();
+				break;
 
-	cout << "\nDeterminant: \n";
-	cout << determinant(A, N) << endl;
+			case 3:
+				system("cls");
+				cout << "Matriks pertama: " << endl;
+				display(A);
+				cout << "\nMatriks kedua: " << endl;
+				display(B);
 
-	cout << "\nThe Adjoint is :\n";
-	adjoint(A, adj);
-	display(adj);
+				cout << "\nHasil perkalian: " << endl;
+				multiply(A, B, C);
+				display(C);
+				clear();
+				break;
 
-	cout << "\nThe Inverse is :\n";
-	if (inverse(A, inv))
-		display(inv);
+			case 4:
+				system("cls");
+				cout << "Tentukan matriks A atau B yang ingin ditemukan determinannya: ";
+				cin >> pilih;
+
+				if (pilih == 'A')
+				{
+					cout << "Determinan matriks A: " << endl;
+					cout << determinant(A, N) << endl;
+				}
+				else if (pilih == 'B')
+				{
+					cout << "Determinan matriks B: " << endl;
+					cout << determinant(B, N) << endl;
+				}
+				else
+				{
+					cout << "Pilihan tidak tersedia" << endl;
+				}
+				clear();
+				break;
+
+			case 5:
+				system("cls");
+				cout << "Tentukan matriks A atau B yang ingin ditemukan Adjoin nya: ";
+				cin >> pilih;
+
+				if (pilih == 'A')
+				{
+					cout << "Adjoin matriks A: " << endl;
+					adjoint(A, adj);
+					display(adj);
+				}
+				else if (pilih == 'B')
+				{
+					cout << "Adjoin matriks B: " << endl;
+					adjoint(B, adj);
+					display(adj);
+				}
+				else
+				{
+					cout << "Pilihan tidak tersedia" << endl;
+				}
+				clear();
+				break;
+
+			case 6:
+				system("cls");
+				cout << "Tentukan matriks A atau B yang ingin ditemukan Inverse nya: ";
+				cin >> pilih;
+
+				if (pilih == 'A')
+				{
+					cout << "Inverse matriks A: " << endl;
+					if (inverse(A, inv)) {
+						display(inv);
+					}
+				}
+				else if (pilih == 'B')
+				{
+					cout << "Inverse matriks B: " << endl;
+					if (inverse(B, inv)) {
+						display(inv);
+					}
+				}
+				else
+				{
+					cout << "Pilihan tidak tersedia" << endl;
+				}
+				clear();
+				break;
+
+			case 7:
+				system("cls");
+				cout << "Matriks A: " << endl;
+				display(A);
+				cout << "Matriks B: " << endl;
+				display(B);
+				clear();
+				break;
+			
+			case 0:
+				break;
+
+			default:
+				cout << "Pilihan tidak tersedia" << endl;
+				clear();
+				break;
+		}
+	} while (option != 0);
 
 	return 0;
 }
