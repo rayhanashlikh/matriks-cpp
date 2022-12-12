@@ -1,9 +1,13 @@
-// C++ program to find adjoint and inverse of a matrix
+// Rayhan Ashlikh Rosyada
+// A11.2021.13398
+// 43UG2
+
 #include <bits/stdc++.h>
 #include <conio.h>
 using namespace std;
 #define N 3
 
+// Procedure untuk menampilkan matriks
 template <class T>
 void display(T A[N][N])
 {
@@ -19,6 +23,7 @@ void display(T A[N][N])
 	cout << endl;
 }
 
+// Procedure untuk menginput matriks
 void input(int A[N][N])
 {
 	for (int i = 0; i < N; i++)
@@ -34,6 +39,7 @@ void input(int A[N][N])
 	display(A);
 }
 
+// Procedure untuk menjumlahkan dua matriks
 void add(int A[N][N], int B[N][N], int C[N][N])
 {
 	for (int i = 0; i < N; i++)
@@ -45,6 +51,7 @@ void add(int A[N][N], int B[N][N], int C[N][N])
 	}
 }
 
+// Procedure untuk mengalikan dua matriks
 void multiply(int A[N][N], int B[N][N], int C[N][N])
 {
 	for (int i = 0; i < N; i++)
@@ -60,27 +67,25 @@ void multiply(int A[N][N], int B[N][N], int C[N][N])
 	}
 }
 
-// Function to get cofactor of A[p][q] in temp[][]. n is
-// current dimension of A[][]
+// Procedure untuk mendapatkan kofator dari A[p][q] dalam temp[][]. dengan N adalah
+// dimensi dari A[][]
 void getCofactor(int A[N][N], int temp[N][N], int p, int q,
 				 int n)
 {
 	int i = 0, j = 0;
 
-	// Looping for each element of the matrix
+	// Looping dari tiap elemen pada matriks
 	for (int row = 0; row < n; row++)
 	{
 		for (int col = 0; col < n; col++)
 		{
-			// Copying into temporary matrix only those
-			// element which are not in given row and
-			// column
+			// Melakukan copy dari tiap elemen yang bukan pada baris p dan kolom q
 			if (row != p && col != q)
 			{
 				temp[i][j++] = A[row][col];
 
-				// Row is filled, so increase row index and
-				// reset col index
+				// Baris telah terisi, maka naikkan indeks baris dan
+				// lakukan reset kolom index
 				if (j == n - 1)
 				{
 					j = 0;
@@ -91,35 +96,36 @@ void getCofactor(int A[N][N], int temp[N][N], int p, int q,
 	}
 }
 
-/* Recursive function for finding determinant of matrix.
-n is current dimension of A[][]. */
+/* Fungsi rekursif untuk menemukan determinan dari matriks,
+dimana n merupakan dimensi dari A[][] */
 int determinant(int A[N][N], int n)
 {
-	int D = 0; // Initialize result
+	int D = 0; // Inisialisasi hasil
 
-	// Base case : if matrix contains single element
+	// Kasus dasar : jika matriks berisi satu elemen
 	if (n == 1)
 		return A[0][0];
 
-	int temp[N][N]; // To store cofactors
+	int temp[N][N]; // Untuk menyimpan kofaktor
 
-	int sign = 1; // To store sign multiplier
+	int sign = 1; // Untuk menyimpan penanda dari matriks yang akan diiterasi
 
-	// Iterate for each element of first row
+	// Melakukan iterasi dari tiap elemen pada baris pertama
 	for (int f = 0; f < n; f++)
 	{
-		// Getting Cofactor of A[0][f]
+		// Mendapatkan kofaktor dari A[0][f]
 		getCofactor(A, temp, 0, f, n);
 		D += sign * A[0][f] * determinant(temp, n - 1);
 
-		// terms are to be added with alternate sign
+		// dilakukan iterasi untuk mengurangi variabel penanda
 		sign = -sign;
 	}
 
 	return D;
 }
 
-// Function to get adjoint of A[N][N] in adj[N][N].
+/* Procedure untuk mendapatkan adjoin dari matriks A[N][N] 
+yang disimpan pada adj[N][N].*/
 void adjoint(int A[N][N], int adj[N][N])
 {
 	if (N == 1)
@@ -128,44 +134,45 @@ void adjoint(int A[N][N], int adj[N][N])
 		return;
 	}
 
-	// temp is used to store cofactors of A[][]
+	// deklarasi variabel temp yang akan menyimpan kofaktor
 	int sign = 1, temp[N][N];
 
 	for (int i = 0; i < N; i++)
 	{
 		for (int j = 0; j < N; j++)
 		{
-			// Get cofactor of A[i][j]
+			// Mendapatkan kofaktor dari A[i][j]
 			getCofactor(A, temp, i, j, N);
 
-			// sign of adj[j][i] positive if sum of row
-			// and column indexes is even.
+			// penanda dari adj[j][i] positif jika jumlah baris 
+			// dan indeks dari kolom adalah genap
 			sign = ((i + j) % 2 == 0) ? 1 : -1;
 
-			// Interchanging rows and columns to get the
-			// transpose of the cofactor matrix
+			// Pergantian baris dan kolom untuk 
+			// mendapatkan transpos dari kofaktor matriks
 			adj[j][i] = (sign) * (determinant(temp, N - 1));
 		}
 	}
 }
 
-// Function to calculate and store inverse, returns false if
-// matrix is singular
+// Fungsi untuk menemukan invers dari matriks A[N][N].
+// mengembalikan nilai false jika matriks singular
 bool inverse(int A[N][N], float inverse[N][N])
 {
-	// Find determinant of A[][]
+	// Mencari determinan dari A[][]
 	int det = determinant(A, N);
+	// Kondisi jika determinan adalah 0
 	if (det == 0)
 	{
 		cout << "Matriks Singular, tidak memiliki invers";
 		return false;
 	}
 
-	// Find adjoint
+	// Mencari adjoin
 	int adj[N][N];
 	adjoint(A, adj);
 
-	// Find Inverse using formula "inverse(A) =
+	// Mencari inverse menggunakan rumus "inverse(A) =
 	// adj(A)/det(A)"
 	for (int i = 0; i < N; i++)
 		for (int j = 0; j < N; j++)
@@ -174,6 +181,7 @@ bool inverse(int A[N][N], float inverse[N][N])
 	return true;
 }
 
+// Fungsi untuk melakukan getch agar program yang dijalankan tidak langsung keluar
 void clear()
 {
 	cout << "\nPress anything to continue...";
