@@ -5,16 +5,16 @@
 #include <bits/stdc++.h>
 #include <conio.h>
 using namespace std;
-#define N 3
+#define N 3 
 
 // Procedure untuk menampilkan matriks
 template <class T>
-void display(T A[N][N])
+void display(T A[50][50], int baris, int kolom)
 {
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < baris; i++)
 	{
 		cout << "| ";
-		for (int j = 0; j < N; j++)
+		for (int j = 0; j < kolom; j++)
 		{
 			cout << A[i][j] << " ";
 		}
@@ -24,27 +24,28 @@ void display(T A[N][N])
 }
 
 // Procedure untuk menginput matriks
-void input(int A[N][N])
+void input(int A[50][50], int baris, int kolom)
 {
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < baris; i++)
 	{
-		for (int j = 0; j < N; j++)
+		for (int j = 0; j < kolom; j++)
 		{
+			cout << "Input matriks baris ke-" << i + 1 << " kolom ke-" << j + 1 << " :";
 			cin >> A[i][j];
 		}
 		cout << endl;
 	}
 
 	cout << "Matriks yang telah diinputkan adalah : " << endl;
-	display(A);
+	display(A, baris, kolom);
 }
 
 // Procedure untuk menjumlahkan dua matriks
-void add(int A[N][N], int B[N][N], int C[N][N])
+void add(int A[50][50], int B[50][50], int C[50][50], int baris, int kolom)
 {
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < baris; i++)
 	{
-		for (int j = 0; j < N; j++)
+		for (int j = 0; j < kolom; j++)
 		{
 			C[i][j] = A[i][j] + B[i][j];
 		}
@@ -52,24 +53,35 @@ void add(int A[N][N], int B[N][N], int C[N][N])
 }
 
 // Procedure untuk mengalikan dua matriks
-void multiply(int A[N][N], int B[N][N], int C[N][N])
+void multiply(int A[50][50], int B[50][50], int C[50][50], int baris1, int kolom2)
 {
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < baris1; i++)
 	{
-		for (int j = 0; j < N; j++)
+		for (int j = 0; j < kolom2; j++)
 		{
 			C[i][j] = 0;
 			for (int k = 0; k < N; k++)
-			{
+			{ 
 				C[i][j] += A[i][k] * B[k][j];
 			}
 		}
 	}
 }
 
+// void transpose(int A[50][50], int transp[50][50], int baris, int kolom)
+// {
+// 	for (int i = 0; i < baris; i++)
+// 	{
+// 		for (int j = 0; j < kolom; j++)
+// 		{
+// 			transp[i][j] = A[j][i];
+// 		}
+// 	}
+// }
+
 // Procedure untuk mendapatkan kofator dari A[p][q] dalam temp[][]. dengan N adalah
 // dimensi dari A[][]
-void getCofactor(int A[N][N], int temp[N][N], int p, int q,
+void getCofactor(int A[50][50], int temp[50][50], int p, int q,
 				 int n)
 {
 	int i = 0, j = 0;
@@ -98,7 +110,7 @@ void getCofactor(int A[N][N], int temp[N][N], int p, int q,
 
 /* Fungsi rekursif untuk menemukan determinan dari matriks,
 dimana n merupakan dimensi dari A[][] */
-int determinant(int A[N][N], int n)
+int determinan(int A[50][50], int n)
 {
 	int D = 0; // Inisialisasi hasil
 
@@ -106,7 +118,7 @@ int determinant(int A[N][N], int n)
 	if (n == 1)
 		return A[0][0];
 
-	int temp[N][N]; // Untuk menyimpan kofaktor
+	int temp[50][50]; // Untuk menyimpan kofaktor
 
 	int sign = 1; // Untuk menyimpan penanda dari matriks yang akan diiterasi
 
@@ -115,7 +127,7 @@ int determinant(int A[N][N], int n)
 	{
 		// Mendapatkan kofaktor dari A[0][f]
 		getCofactor(A, temp, 0, f, n);
-		D += sign * A[0][f] * determinant(temp, n - 1);
+		D += sign * A[0][f] * determinan(temp, n - 1);
 
 		// dilakukan iterasi untuk mengurangi variabel penanda
 		sign = -sign;
@@ -124,25 +136,25 @@ int determinant(int A[N][N], int n)
 	return D;
 }
 
-/* Procedure untuk mendapatkan adjoin dari matriks A[N][N] 
-yang disimpan pada adj[N][N].*/
-void adjoint(int A[N][N], int adj[N][N])
+/* Procedure untuk mendapatkan adjoin dari matriks A[50][50] 
+yang disimpan pada adj[50][50].*/
+void adjoin(int A[50][50], int adj[50][50], int n)
 {
-	if (N == 1)
+	if (n == 1)
 	{
 		adj[0][0] = 1;
 		return;
 	}
 
 	// deklarasi variabel temp yang akan menyimpan kofaktor
-	int sign = 1, temp[N][N];
+	int sign = 1, temp[50][50];
 
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < n; i++)
 	{
-		for (int j = 0; j < N; j++)
+		for (int j = 0; j < n; j++)
 		{
 			// Mendapatkan kofaktor dari A[i][j]
-			getCofactor(A, temp, i, j, N);
+			getCofactor(A, temp, i, j, n);
 
 			// penanda dari adj[j][i] positif jika jumlah baris 
 			// dan indeks dari kolom adalah genap
@@ -150,32 +162,32 @@ void adjoint(int A[N][N], int adj[N][N])
 
 			// Pergantian baris dan kolom untuk 
 			// mendapatkan transpos dari kofaktor matriks
-			adj[j][i] = (sign) * (determinant(temp, N - 1));
+			adj[j][i] = (sign) * (determinan(temp, n - 1));
 		}
 	}
 }
 
-// Fungsi untuk menemukan invers dari matriks A[N][N].
+// Fungsi untuk menemukan invers dari matriks A[50][50].
 // mengembalikan nilai false jika matriks singular
-bool inverse(int A[N][N], float inverse[N][N])
+bool inverse(int A[50][50], float inverse[50][50], int baris, int kolom)
 {
 	// Mencari determinan dari A[][]
-	int det = determinant(A, N);
+	int det = determinan(A, baris);
 	// Kondisi jika determinan adalah 0
 	if (det == 0)
 	{
 		cout << "Matriks Singular, tidak memiliki invers";
-		return false;
+		return false;  
 	}
 
 	// Mencari adjoin
-	int adj[N][N];
-	adjoint(A, adj);
+	int adj[50][50];
+	adjoin(A, adj, baris);
 
 	// Mencari inverse menggunakan rumus "inverse(A) =
 	// adj(A)/det(A)"
-	for (int i = 0; i < N; i++)
-		for (int j = 0; j < N; j++)
+	for (int i = 0; i < baris; i++)
+		for (int j = 0; j < kolom; j++)
 			inverse[i][j] = adj[i][j] / float(det);
 
 	return true;
@@ -191,18 +203,10 @@ void clear()
 int main()
 {
 	int option, 
-	A[N][N] = {
-		-11, 2, 3,
-		4, 5, 6,
-		7, 21, 9
-	}, 
-	B[N][N] = {
-		10, 11, 12,
-		13, 14, 15,
-		16, 17, 18
-	}, 
-	C[N][N], adj[N][N];
-	float inv[N][N];
+	A[50][50],
+	B[50][50],
+	C[50][50], adj[50][50], baris1, kolom1, baris2, kolom2, baris3, kolom3;
+	float inv[50][50];
 	char pilih;
 
 	do
@@ -225,36 +229,60 @@ int main()
 		{
 			case 1:
 				system("cls");
+				cout << "Masukkan jumlah baris matriks A: ";
+				cin >> baris1;
+				cout << "Masukkan jumlah kolom matriks A: ";
+				cin >> kolom1;
 				cout << "Masukkan elemen matriks pertama: " << endl;
-				input(A);
+				input(A, baris1, kolom1);
+				getch();
+
+				cout << "Masukkan jumlah baris matriks B: ";
+				cin >> baris2;
+				cout << "Masukkan jumlah kolom matriks B: ";
+				cin >> kolom2;
 				cout << "\nMasukkan elemen matriks kedua: " << endl;
-				input(B);
+				input(B, baris2, kolom2);
 				clear();
 				break;
 
 			case 2:
 				system("cls");
 				cout << "Matriks pertama: " << endl;
-				display(A);
+				display(A, baris1, kolom1);
 				cout << "\nMatriks kedua: " << endl;
-				display(B);
+				display(B, baris2, kolom2);
 
-				cout << "\nHasil penjumlahan: " << endl;
-				add(A, B, C);
-				display(C);
+				if (baris1 == baris2 && kolom1 == kolom2)
+				{
+					cout << "\nHasil penjumlahan: " << endl;
+					add(A, B, C, baris1, kolom1);
+					display(C, baris1, kolom1);
+				}
+				else
+				{
+					cout << "\nMatriks tidak dapat dijumlahkan" << endl;
+				}
 				clear();
 				break;
 
 			case 3:
 				system("cls");
 				cout << "Matriks pertama: " << endl;
-				display(A);
+				display(A, baris1, kolom1);
 				cout << "\nMatriks kedua: " << endl;
-				display(B);
+				display(B, baris2, kolom2);
 
-				cout << "\nHasil perkalian: " << endl;
-				multiply(A, B, C);
-				display(C);
+				if (kolom1 == baris2)
+				{
+					cout << "\nHasil perkalian: " << endl;
+					multiply(A, B, C, baris1, kolom2);
+					display(C, baris1, kolom2);
+				}
+				else
+				{
+					cout << "\nMatriks tidak dapat dikalikan" << endl;
+				}
 				clear();
 				break;
 
@@ -265,13 +293,27 @@ int main()
 
 				if (pilih == 'A')
 				{
-					cout << "Determinan matriks A: " << endl;
-					cout << determinant(A, N) << endl;
+					if (baris1 != kolom1)
+					{
+						cout << "Matriks tidak dapat dihitung determinannya" << endl;
+					}
+					else
+					{
+						cout << "Determinan matriks A: " << endl;
+						cout << determinan(A, baris1) << endl;
+					}
 				}
 				else if (pilih == 'B')
 				{
-					cout << "Determinan matriks B: " << endl;
-					cout << determinant(B, N) << endl;
+					if (baris2 != kolom2)
+					{
+						cout << "Matriks tidak dapat dihitung determinannya" << endl;
+					}
+					else
+					{
+						cout << "Determinan matriks B: " << endl;
+						cout << determinan(B, baris2) << endl;
+					}
 				}
 				else
 				{
@@ -287,15 +329,29 @@ int main()
 
 				if (pilih == 'A')
 				{
-					cout << "Adjoin matriks A: " << endl;
-					adjoint(A, adj);
-					display(adj);
+					if (baris1 != kolom1)
+					{
+						cout << "Matriks A tidak dapat dihitung Adjoinnya" << endl;
+					}
+					else
+					{
+						cout << "Adjoin matriks A: " << endl;
+						adjoin(A, adj, baris1);
+						display(adj, baris1, kolom1);
+					}
 				}
 				else if (pilih == 'B')
 				{
-					cout << "Adjoin matriks B: " << endl;
-					adjoint(B, adj);
-					display(adj);
+					if (baris2 != kolom2)
+					{
+						cout << "Matriks B tidak dapat dihitung Adjoinnya" << endl;
+					}
+					else
+					{
+						cout << "Adjoin matriks B: " << endl;
+						adjoin(B, adj, baris2);
+						display(adj, baris2, kolom2);
+					}
 				}
 				else
 				{
@@ -311,16 +367,30 @@ int main()
 
 				if (pilih == 'A')
 				{
-					cout << "Inverse matriks A: " << endl;
-					if (inverse(A, inv)) {
-						display(inv);
+					if (baris1 != kolom1)
+					{
+						cout << "Matriks A tidak dapat dihitung Inversenya" << endl;
+					}
+					else
+					{
+						cout << "Inverse matriks A: " << endl;
+						if (inverse(A, inv, baris1, kolom1)) {
+							display(inv, baris1, kolom1);
+						}
 					}
 				}
 				else if (pilih == 'B')
 				{
-					cout << "Inverse matriks B: " << endl;
-					if (inverse(B, inv)) {
-						display(inv);
+					if (baris2 != kolom2)
+					{
+						cout << "Matriks B tidak dapat dihitung Inversenya" << endl;
+					}
+					else
+					{
+						cout << "Inverse matriks B: " << endl;
+						if (inverse(B, inv, baris2, kolom2)) {
+							display(inv, baris2, kolom2);
+						}
 					}
 				}
 				else
@@ -333,9 +403,9 @@ int main()
 			case 7:
 				system("cls");
 				cout << "Matriks A: " << endl;
-				display(A);
+				display(A, baris1, kolom1);
 				cout << "Matriks B: " << endl;
-				display(B);
+				display(B, baris2, kolom2);
 				clear();
 				break;
 			
